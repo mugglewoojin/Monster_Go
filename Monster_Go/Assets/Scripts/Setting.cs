@@ -33,6 +33,9 @@ public class Setting : MonoBehaviour
         scale = (int)sliderS.value;
         num = (int)sliderM.value;
 
+        PlayerPrefs.SetInt("scale", scale);
+        PlayerPrefs.SetInt("num", num);
+
         textS.text = scale.ToString();
         textM.text = num.ToString();
     }
