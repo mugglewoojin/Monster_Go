@@ -17,8 +17,8 @@ public class Game_Data : MonoBehaviour
 
     void Awake()
     {
-        room_Scale = Setting.scale;
-        monster_num = Setting.num;
+        room_Scale = PlayerPrefs.GetInt("scale");
+        monster_num = PlayerPrefs.GetInt("num");
         
         // 방 생성
         room = new Room[room_Scale, room_Scale];
