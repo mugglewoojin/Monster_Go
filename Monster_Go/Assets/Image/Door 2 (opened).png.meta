@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 9750dbb498e6843458ddd96f405b3d1b
+guid: 70f7510d213859b4a81fe5452f774184
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6050727059572449791
-    second: Lever 1 (down)_0
+      213: 1051128495163993943
+    second: Door 2 (opened)_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -122,16 +122,29 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Lever 1 (down)_0
+      name: Door 2 (opened)_0
       rect:
         serializedVersion: 2
-        x: 8
+        x: 0
         y: 0
-        width: 16
+        width: 32
         height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -141,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 10e17552ccf770ca0800000000000000
-      internalID: -6050727059572449791
+      spriteID: 75f6a871ccb569e00800000000000000
+      internalID: 1051128495163993943
       vertices: []
       indices: 
       edges: []
@@ -161,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Lever 1 (down)_0: -6050727059572449791
+      Door 2 (opened)_0: 1051128495163993943
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
