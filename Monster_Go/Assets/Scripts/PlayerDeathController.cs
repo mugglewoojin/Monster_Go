@@ -13,7 +13,7 @@ public class PlayerDeathController : MonoBehaviour
     public float delayBeforeScene = 3f;
     public string deathSceneName = "DeathMessage";
 
-    void Start()
+    void Awake()
     {
         // 처음에는 숨기기
         if (deathImage != null)

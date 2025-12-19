@@ -17,11 +17,11 @@ public class DoorUIController : MonoBehaviour
     public Sprite leverUp;    // 문 열림
     public Sprite leverDown;  // 문 닫힘
 
+    public AudioSource audioSource;
     public AudioClip clip;
     void Start()
     {
         UpdateUI();
-        AudioSource audio = gameObject.AddComponent<AudioSource>();
     }
 
     // =========================
@@ -41,7 +41,7 @@ public class DoorUIController : MonoBehaviour
     public void OnLeverButton()
     {
         gameData.ToggleDoor(view.viewDir);
-        GetComponent<AudioSource>().PlayOneShot(clip);
+        audioSource.PlayOneShot(clip);
         UpdateUI();
     }
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class Game_Data : MonoBehaviour
@@ -91,40 +92,38 @@ public class Game_Data : MonoBehaviour
 {
     del = 0;
 
-    switch (dir)
-    {
-        case 0: // up
-            if (y + 1 >= room_Scale) return false;
-            if (room[x, y].door[0]) return false;
-            if (room[x, y + 1].door[3]) return false;
+    // canmove
+        switch (dir)
+        {
+            case 0: // 위
+                if (y + 1 >= room_Scale) return false;
+                if (room[x, y].door[0]) return false;
+                if (room[x, y + 1].door[2]) return false; // 아래쪽 문
+                del = room[x, y + 1].DelLevelCalculator(playerHasTorch);
+                return true;
 
-            del = room[x, y + 1].DelLevelCalculator(playerHasTorch);
-            return true;
+            case 1: // 오른쪽
+                if (x + 1 >= room_Scale) return false;
+                if (room[x, y].door[1]) return false;
+                if (room[x + 1, y].door[3]) return false; // 왼쪽 문
+                del = room[x + 1, y].DelLevelCalculator(playerHasTorch);
+                return true;
 
-        case 1: // right
-            if (x + 1 >= room_Scale) return false;
-            if (room[x, y].door[1]) return false;
-            if (room[x + 1, y].door[2]) return false;
+            case 2: // 아래
+                if (y - 1 < 0) return false;
+                if (room[x, y].door[2]) return false;
+                if (room[x, y - 1].door[0]) return false; // 위쪽 문
+                del = room[x, y - 1].DelLevelCalculator(playerHasTorch);
+                return true;
 
-            del = room[x + 1, y].DelLevelCalculator(playerHasTorch);
-            return true;
+            case 3: // 왼쪽
+                if (x - 1 < 0) return false;
+                if (room[x, y].door[3]) return false;
+                if (room[x - 1, y].door[1]) return false; // 오른쪽 문
+                del = room[x - 1, y].DelLevelCalculator(playerHasTorch);
+                return true;
+        }
 
-        case 2: // left
-            if (x - 1 < 0) return false;
-            if (room[x, y].door[2]) return false;
-            if (room[x - 1, y].door[1]) return false;
-
-            del = room[x - 1, y].DelLevelCalculator(playerHasTorch);
-            return true;
-
-        case 3: // down
-            if (y - 1 < 0) return false;
-            if (room[x, y].door[3]) return false;
-            if (room[x, y - 1].door[0]) return false;
-
-            del = room[x, y - 1].DelLevelCalculator(playerHasTorch);
-            return true;
-    }
 
     return false;
 }
@@ -228,7 +227,15 @@ public class Game_Data : MonoBehaviour
     void PlayerDie()
     {
         Debug.Log("Player Dead");
+
+        // PlayerDeathController 호출
+        PlayerDeathController deathCtrl = FindObjectOfType<PlayerDeathController>();
+        if (deathCtrl != null)
+        {
+            deathCtrl.OnPlayerDie();
+        }
     }
+
 
 
     void CheckPlayerDeath()
@@ -313,12 +320,13 @@ public class Game_Data : MonoBehaviour
         int nx = playerX;
         int ny = playerY;
 
+        // TryMovePlayer
         switch (dir)
         {
-            case 0: ny++; break; // up
-            case 1: nx++; break; // right
-            case 2: nx--; break; // left
-            case 3: ny--; break; // down
+            case 0: ny++; break; // 위
+            case 1: nx++; break; // 오른쪽
+            case 2: ny--; break; // 아래
+            case 3: nx--; break; // 왼쪽
         }
 
         // 맵 범위
@@ -355,6 +363,21 @@ public class Game_Data : MonoBehaviour
         room[playerX, playerY].isplayer = 1;
 
         return true;
+    }
+
+    void CheckWinCondition()
+    {
+        for (int i = 0; i < monster_num; i++)
+        {
+            if (monster[i, 0] != -1) // 살아있는 몬스터가 하나라도 있으면
+                return;
+        }
+
+        // 몬스터가 모두 사망 → 승리
+        Debug.Log("🎉 모든 몬스터 처치! 승리!");
+
+        // 씬 전환
+        SceneManager.LoadScene("WinScene");
     }
 
 
@@ -400,16 +423,20 @@ public class Game_Data : MonoBehaviour
             {
                 monster[i, 0] = -1;
                 monster[i, 1] = -1;
+
+
+                CheckWinCondition();
                 continue;
             }
 
             switch (dir)
             {
-                case 0: monster[i, 1]++; break;
-                case 1: monster[i, 0]++; break;
-                case 2: monster[i, 0]--; break;
-                case 3: monster[i, 1]--; break;
+                case 0: monster[i, 1]++; break; // 위
+                case 1: monster[i, 0]++; break; // 오른쪽
+                case 2: monster[i, 1]--; break; // 아래
+                case 3: monster[i, 0]--; break; // 왼쪽
             }
+
         }
 
         CheckWarning();
