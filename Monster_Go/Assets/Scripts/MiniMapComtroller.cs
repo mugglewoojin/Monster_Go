@@ -8,9 +8,11 @@ public class MiniMapController : MonoBehaviour
     public Image[,] cells = new Image[5, 5];
 
     [Header("Colors")]
-    public Color baseColor = Color.black;
-    public Color playerColor = Color.green;
-    public Color enemyColor = Color.red;
+public Color baseColor = Color.black;
+public Color outOfMapColor = Color.gray;   // ⭐ 맵 밖
+public Color playerColor = Color.green;
+public Color enemyColor = Color.red;
+
     
     public Game_Data gameData;
 
@@ -65,13 +67,34 @@ public class MiniMapController : MonoBehaviour
 
     void ClearMap()
     {
-        for (int x = 0; x < 5; x++)
-            for (int y = 0; y < 5; y++)
-                cells[x, y].color = baseColor;
+        for (int dx = -2; dx <= 2; dx++)
+        {
+            for (int dy = -2; dy <= 2; dy++)
+            {
+                int mapX = dx + 2;
+                int mapY = dy + 2;
 
-        // 플레이어는 항상 표시
+                int worldX = gameData.playerX + dx;
+                int worldY = gameData.playerY + dy;
+
+                // 🔹 맵 밖
+                if (worldX < 0 || worldX >= gameData.room_Scale ||
+                    worldY < 0 || worldY >= gameData.room_Scale)
+                {
+                    cells[mapX, mapY].color = outOfMapColor;
+                }
+                else
+                {
+                    cells[mapX, mapY].color = baseColor;
+                }
+            }
+        }
+
+        // 플레이어는 항상 중앙
         cells[2, 2].color = playerColor;
     }
+
+
 
     void DrawMap(bool showEnemies)
     {

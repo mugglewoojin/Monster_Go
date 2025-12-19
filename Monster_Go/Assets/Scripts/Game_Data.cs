@@ -15,7 +15,7 @@ public class Game_Data : MonoBehaviour
     public bool playerHasTorch = false;
 
 
-    void Start()
+    void Awake()
     {
         // 방 생성
         room = new Room[room_Scale, room_Scale];
@@ -85,54 +85,47 @@ public class Game_Data : MonoBehaviour
     // 이동 가능 여부 + del_level
     // =========================
     public bool canmove(int dir, int x, int y, out int del)
+{
+    del = 0;
+
+    switch (dir)
     {
-        del = int.MinValue;
+        case 0: // up
+            if (y + 1 >= room_Scale) return false;
+            if (room[x, y].door[0]) return false;
+            if (room[x, y + 1].door[3]) return false;
 
-        switch (dir)
-        {
-            case 0: // up
-                if (y + 1 >= room_Scale) return false;
+            del = room[x, y + 1].DelLevelCalculator(playerHasTorch);
+            return true;
 
-                // 현재 방 up 문 + 위 방 down 문
-                if (room[x, y].door[0]) return false;
-                if (room[x, y + 1].door[3]) return false;
+        case 1: // right
+            if (x + 1 >= room_Scale) return false;
+            if (room[x, y].door[1]) return false;
+            if (room[x + 1, y].door[2]) return false;
 
-                del = room[x, y + 1].DelLevelCalculator();
-                return true;
+            del = room[x + 1, y].DelLevelCalculator(playerHasTorch);
+            return true;
 
-            case 1: // right
-                if (x + 1 >= room_Scale) return false;
+        case 2: // left
+            if (x - 1 < 0) return false;
+            if (room[x, y].door[2]) return false;
+            if (room[x - 1, y].door[1]) return false;
 
-                // 현재 방 right 문 + 오른쪽 방 left 문
-                if (room[x, y].door[1]) return false;
-                if (room[x + 1, y].door[2]) return false;
+            del = room[x - 1, y].DelLevelCalculator(playerHasTorch);
+            return true;
 
-                del = room[x + 1, y].DelLevelCalculator();
-                return true;
+        case 3: // down
+            if (y - 1 < 0) return false;
+            if (room[x, y].door[3]) return false;
+            if (room[x, y - 1].door[0]) return false;
 
-            case 2: // left
-                if (x - 1 < 0) return false;
-
-                // 현재 방 left 문 + 왼쪽 방 right 문
-                if (room[x, y].door[2]) return false;
-                if (room[x - 1, y].door[1]) return false;
-
-                del = room[x - 1, y].DelLevelCalculator();
-                return true;
-
-            case 3: // down
-                if (y - 1 < 0) return false;
-
-                // 현재 방 down 문 + 아래 방 up 문
-                if (room[x, y].door[3]) return false;
-                if (room[x, y - 1].door[0]) return false;
-
-                del = room[x, y - 1].DelLevelCalculator();
-                return true;
-        }
-
-        return false;
+            del = room[x, y - 1].DelLevelCalculator(playerHasTorch);
+            return true;
     }
+
+    return false;
+}
+
 
 
     // =========================
@@ -176,19 +169,31 @@ public class Game_Data : MonoBehaviour
         if (!cur.hasTorch) return;    // 방에 횃불 없음
 
         playerHasTorch = true;
+        Debug.Log("asdf");
         cur.hasTorch = false;
     }
 
     public void DropTorchButton()
     {
+        if (!playerHasTorch) return; // 들고 있지 않으면 아무것도 안 함
+
         Room cur = room[playerX, playerY];
 
-        if (!playerHasTorch) return;  // 들고 있지 않음
-        if (cur.hasTorch) return;     // 이미 방에 횃불 있음
+        // 이미 방에 토치가 있으면 → 플레이어 토치 소멸
+        if (cur.hasTorch)
+        {
+            playerHasTorch = false;
+            Debug.Log("토치를 내려놓았지만 방에 이미 토치가 있어서 사라짐");
+            return;
+        }
 
+        // 방에 토치가 없으면 정상적으로 내려놓기
         playerHasTorch = false;
         cur.hasTorch = true;
+
+        Debug.Log("토치를 방에 내려놓음");
     }
+
 
     public void ToggleDoorButton(int dir)
     {
@@ -295,10 +300,76 @@ public class Game_Data : MonoBehaviour
 
     public void ToggleDoor(int dir)
     {
-        room[playerX, playerY].door[dir] =
-            !room[playerX, playerY].door[dir];
+        bool current = room[playerX, playerY].door[dir];
+        SetDoor(playerX, playerY, dir, !current);
     }
 
+
+    public bool TryMovePlayer(int dir)
+    {
+        int nx = playerX;
+        int ny = playerY;
+
+        switch (dir)
+        {
+            case 0: ny++; break; // up
+            case 1: nx++; break; // right
+            case 2: nx--; break; // left
+            case 3: ny--; break; // down
+        }
+
+        // 맵 범위
+        if (nx < 0 || nx >= room_Scale || ny < 0 || ny >= room_Scale)
+        {
+            Debug.Log("이동 불가: 맵 밖");
+            return false;
+        }
+
+        // 현재 방 문
+        if (room[playerX, playerY].door[dir])
+        {
+            Debug.Log("이동 불가: 현재 방 문이 닫힘");
+            return false;
+        }
+
+        // 반대편 방 문
+        int opp = (dir == 0) ? 3 :
+                (dir == 1) ? 2 :
+                (dir == 2) ? 1 : 0;
+
+        if (room[nx, ny].door[opp])
+        {
+            Debug.Log("이동 불가: 반대쪽 문이 닫힘");
+            return false;
+        }
+
+        // ✅ 여기서만 실제 이동
+        room[playerX, playerY].isplayer = 0;
+
+        playerX = nx;
+        playerY = ny;
+
+        room[playerX, playerY].isplayer = 1;
+
+        return true;
+    }
+
+
+
+
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            TorchButton();   // 토치 집기
+        }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            DropTorchButton(); // 토치 내려놓기
+        }
+    }
 
 
 
@@ -355,14 +426,31 @@ public class Room
     public bool[] door = new bool[4];
     public bool[] leverDown = new bool[4];
 
-    public int light = 1;
-    public const int MAX_LIGHT = 2;   // ⭐ 최대 밝기
-
     public bool hasTorch = true;
     public int isplayer = 0;
 
-    public int DelLevelCalculator()
+    public int light;
+
+    public const int MAX_LIGHT = 2;
+
+    public int GetLightLevel(bool playerHasTorch)
     {
+        light = 0;
+
+        // 방에 토치가 있으면 +1
+        if (hasTorch)
+            light += 1;
+
+        // 플레이어가 있고 + 토치를 들고 있으면 +1
+        if (isplayer == 1 && playerHasTorch)
+            light += 1;
+
+        return light; // 0 ~ 2
+    }
+
+    public int DelLevelCalculator(bool playerHasTorch)
+    {
+        int light = GetLightLevel(playerHasTorch);
         return 2 - light + isplayer;
     }
 }
