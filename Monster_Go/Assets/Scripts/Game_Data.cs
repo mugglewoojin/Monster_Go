@@ -288,6 +288,17 @@ public class Game_Data : MonoBehaviour
         // - UI 아이콘
     }
 
+    public bool IsDoorClosed(int dir)
+    {
+        return room[playerX, playerY].door[dir];
+    }
+
+    public void ToggleDoor(int dir)
+    {
+        room[playerX, playerY].door[dir] =
+            !room[playerX, playerY].door[dir];
+    }
+
 
 
 
@@ -342,6 +353,7 @@ public class Room
 {
     // 0: up, 1: right, 2: left, 3: down
     public bool[] door = new bool[4];
+    public bool[] leverDown = new bool[4];
 
     public int light = 1;
     public const int MAX_LIGHT = 2;   // ⭐ 최대 밝기

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 70f7510d213859b4a81fe5452f774184
+guid: afa4e423c2ce17647b70b042b7662c0d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1051128495163993943
-    second: Door 2 (opened)_0
+      213: 4432050583816810490
+    second: Door 1 (closed)_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -122,11 +122,24 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Door 2 (opened)_0
+      name: Door 1 (closed)_0
       rect:
         serializedVersion: 2
         x: 0
@@ -141,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 75f6a871ccb569e00800000000000000
-      internalID: 1051128495163993943
+      spriteID: affa6f2268ec18d30800000000000000
+      internalID: 4432050583816810490
       vertices: []
       indices: 
       edges: []
@@ -161,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Door 2 (opened)_0: 1051128495163993943
+      Door 1 (closed)_0: 4432050583816810490
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
