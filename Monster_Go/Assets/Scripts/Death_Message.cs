@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Death_Message : MonoBehaviour
 {
@@ -33,6 +34,8 @@ public class Death_Message : MonoBehaviour
 
         // 페이드 아웃
         yield return StartCoroutine(Fade(1f, 0f, fadeOutDuration));
+
+        SceneManager.LoadScene("StartScene");
     }
 
     IEnumerator Fade(float startAlpha, float endAlpha, float duration)
@@ -47,5 +50,7 @@ public class Death_Message : MonoBehaviour
         }
 
         canvasGroup.alpha = endAlpha;
+
+        
     }
 }
