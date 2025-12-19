@@ -14,6 +14,8 @@ public class Game_Data : MonoBehaviour
     public int playerY;
 
     public bool playerHasTorch = false;
+    public AudioSource audioSource;
+    public AudioClip audio;
 
 
     void Awake()
@@ -295,6 +297,7 @@ public class Game_Data : MonoBehaviour
     void ShowWarning()
     {
         Debug.Log("⚠️ 몬스터가 근처에 있다!");
+        StartCoroutine(PlayClipForDuration(audioSource, 3));
         
         // 여기에 나중에
         // - 화면 흔들림
@@ -302,6 +305,14 @@ public class Game_Data : MonoBehaviour
         // - 붉은 비네트
         // - UI 아이콘
     }
+
+    IEnumerator PlayClipForDuration(AudioSource audio, float duration)
+    {
+        audio.Play();
+        yield return new WaitForSeconds(duration);
+        audio.Stop();
+    }
+
 
     public bool IsDoorClosed(int dir)
     {

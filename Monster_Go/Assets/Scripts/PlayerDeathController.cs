@@ -13,6 +13,9 @@ public class PlayerDeathController : MonoBehaviour
     public float delayBeforeScene = 3f;
     public string deathSceneName = "DeathMessage";
 
+    public AudioSource audioSource;
+    public AudioClip clip;
+
     void Awake()
     {
         // 처음에는 숨기기
@@ -37,6 +40,7 @@ public class PlayerDeathController : MonoBehaviour
 
     IEnumerator GoToDeathScene()
     {
+        audioSource.PlayOneShot(clip);
         yield return new WaitForSeconds(delayBeforeScene);
         SceneManager.LoadScene(deathSceneName);
     }
