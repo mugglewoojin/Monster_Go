@@ -91,44 +91,43 @@ public class Game_Data : MonoBehaviour
     // 이동 가능 여부 + del_level
     // =========================
     public bool canmove(int dir, int x, int y, out int del)
-{
-    del = 0;
+    {
+        del = 0;
 
-    // canmove
         switch (dir)
         {
             case 0: // 위
                 if (y + 1 >= room_Scale) return false;
                 if (room[x, y].door[0]) return false;
-                if (room[x, y + 1].door[2]) return false; // 아래쪽 문
+                if (room[x, y + 1].door[2]) return false;
                 del = room[x, y + 1].DelLevelCalculator(playerHasTorch);
                 return true;
 
             case 1: // 오른쪽
                 if (x + 1 >= room_Scale) return false;
                 if (room[x, y].door[1]) return false;
-                if (room[x + 1, y].door[3]) return false; // 왼쪽 문
+                if (room[x + 1, y].door[3]) return false;
                 del = room[x + 1, y].DelLevelCalculator(playerHasTorch);
                 return true;
 
             case 2: // 아래
                 if (y - 1 < 0) return false;
                 if (room[x, y].door[2]) return false;
-                if (room[x, y - 1].door[0]) return false; // 위쪽 문
+                if (room[x, y - 1].door[0]) return false;
                 del = room[x, y - 1].DelLevelCalculator(playerHasTorch);
                 return true;
 
             case 3: // 왼쪽
                 if (x - 1 < 0) return false;
                 if (room[x, y].door[3]) return false;
-                if (room[x - 1, y].door[1]) return false; // 오른쪽 문
+                if (room[x - 1, y].door[1]) return false;
                 del = room[x - 1, y].DelLevelCalculator(playerHasTorch);
                 return true;
         }
 
+        return false;
+    }
 
-    return false;
-}
 
 
 
@@ -209,14 +208,31 @@ public class Game_Data : MonoBehaviour
     {
         room[x, y].door[dir] = closed;
 
-        int nx = x, ny = y, ndir = 0;
+        int nx = x;
+        int ny = y;
+        int ndir = 0;
 
         switch (dir)
         {
-            case 0: ny++; ndir = 3; break;
-            case 1: nx++; ndir = 2; break;
-            case 2: nx--; ndir = 1; break;
-            case 3: ny--; ndir = 0; break;
+            case 0: // 위
+                ny += 1;
+                ndir = 2;
+                break;
+
+            case 1: // 오른쪽
+                nx += 1;
+                ndir = 3;
+                break;
+
+            case 2: // 아래
+                ny -= 1;
+                ndir = 0;
+                break;
+
+            case 3: // 왼쪽
+                nx -= 1;
+                ndir = 1;
+                break;
         }
 
         if (nx >= 0 && nx < room_Scale &&
@@ -225,6 +241,7 @@ public class Game_Data : MonoBehaviour
             room[nx, ny].door[ndir] = closed;
         }
     }
+
 
     void PlayerDie()
     {
@@ -265,34 +282,35 @@ public class Game_Data : MonoBehaviour
             int mx = monster[i, 0];
             int my = monster[i, 1];
 
-            if (mx == -1) continue; // 죽은 몬스터 무시
+            if (mx == -1) continue;
 
-            // 상
+            // 위
             if (mx == playerX && my == playerY + 1)
             {
                 if (!room[playerX, playerY].door[0])
                     ShowWarning();
             }
-            // 우
+            // 오른쪽
             else if (mx == playerX + 1 && my == playerY)
             {
                 if (!room[playerX, playerY].door[1])
                     ShowWarning();
             }
-            // 좌
-            else if (mx == playerX - 1 && my == playerY)
+            // 아래
+            else if (mx == playerX && my == playerY - 1)
             {
                 if (!room[playerX, playerY].door[2])
                     ShowWarning();
             }
-            // 하
-            else if (mx == playerX && my == playerY - 1)
+            // 왼쪽
+            else if (mx == playerX - 1 && my == playerY)
             {
                 if (!room[playerX, playerY].door[3])
                     ShowWarning();
             }
         }
     }
+
 
     void ShowWarning()
     {
