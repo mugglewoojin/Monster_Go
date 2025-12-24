@@ -349,7 +349,7 @@ public class Game_Data : MonoBehaviour
         int nx = playerX;
         int ny = playerY;
 
-        // TryMovePlayer
+        // 1. 이동할 목표 좌표 계산
         switch (dir)
         {
             case 0: ny++; break; // 위
@@ -358,24 +358,24 @@ public class Game_Data : MonoBehaviour
             case 3: nx--; break; // 왼쪽
         }
 
-        // 맵 범위
+        // 2. 맵 경계 체크
         if (nx < 0 || nx >= room_Scale || ny < 0 || ny >= room_Scale)
         {
             Debug.Log("이동 불가: 맵 밖");
             return false;
         }
 
-        // 현재 방 문
+        // 3. 현재 방의 나가는 문이 닫혀있는지 체크
         if (room[playerX, playerY].door[dir])
         {
             Debug.Log("이동 불가: 현재 방 문이 닫힘");
             return false;
         }
 
-        // 반대편 방 문
-        int opp = (dir == 0) ? 3 :
-                (dir == 1) ? 2 :
-                (dir == 2) ? 1 : 0;
+        // 4. 반대편 방의 들어오는 문이 닫혀있는지 체크
+        // 반대 방향 공식: (현재방향 + 2) % 4
+        // 0(위)->2(아래), 1(오)->3(왼), 2(아)->0(위), 3(왼)->1(오)
+        int opp = (dir + 2) % 4;
 
         if (room[nx, ny].door[opp])
         {
@@ -383,13 +383,13 @@ public class Game_Data : MonoBehaviour
             return false;
         }
 
-        // ✅ 여기서만 실제 이동
-        room[playerX, playerY].isplayer = 0;
+        // 5. 실제 이동 처리
+        room[playerX, playerY].isplayer = 0; // 이전 방에서 플레이어 제거
 
         playerX = nx;
         playerY = ny;
 
-        room[playerX, playerY].isplayer = 1;
+        room[playerX, playerY].isplayer = 1; // 새 방에 플레이어 표시
 
         return true;
     }
@@ -481,7 +481,7 @@ public class Game_Data : MonoBehaviour
 
 public class Room
 {
-    // 0: up, 1: right, 2: left, 3: down
+    // 0: up, 1: right, 2: down, 3: left
     public bool[] door = new bool[4];
     public bool[] leverDown = new bool[4];
 

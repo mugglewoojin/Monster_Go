@@ -24,6 +24,27 @@ public class DoorUIController : MonoBehaviour
         UpdateUI();
     }
 
+    void Update(){
+        if(Input.GetKeyDown(KeyCode.LeftControl)){
+            gameData.ToggleDoor(view.viewDir);
+            audioSource.PlayOneShot(clip);
+            UpdateUI();
+        }
+        if(Input.GetKeyDown(KeyCode.LeftShift)){
+            bool moved = gameData.TryMovePlayer(view.viewDir);
+
+            if (moved)
+            {
+                Debug.Log("플레이어 이동 성공");
+                UpdateUI();
+            }
+            else
+            {
+                Debug.Log("이동 불가");
+            }
+        }
+    }
+
     // =========================
     // UI 갱신
     // =========================
