@@ -5,11 +5,14 @@ public class EdgeLookCollider : MonoBehaviour
     public ViewController view;
     public bool isLeft; // true = 왼쪽, false = 오른쪽
 
-    void OnMouseEnter()
+    void Update()
     {
-        if (isLeft)
+        if(isLeft && Input.GetKeyDown(KeyCode.LeftArrow)){
             view.RotateLeft();
-        else
+        }
+        else if(!isLeft && Input.GetKeyDown(KeyCode.RightArrow)){
             view.RotateRight();
+        }
+        
     }
 }

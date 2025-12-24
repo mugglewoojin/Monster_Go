@@ -32,11 +32,13 @@ public Color enemyColor = Color.red;
                 cells[x, y] = flatCells[index++];
             }
         }
+        StartCoroutine(RevealEnemies());
     }
 
     void Start()
     {
         ClearMap();
+        
     }
 
     public Image[] flatCells; // 25개
@@ -46,10 +48,7 @@ public Color enemyColor = Color.red;
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && canUse)
-        {
-            StartCoroutine(RevealEnemies());
-        }
+        
     }
 
     IEnumerator RevealEnemies()
@@ -63,6 +62,7 @@ public Color enemyColor = Color.red;
 
         yield return new WaitForSeconds(cooldown);
         canUse = true;
+        StartCoroutine(RevealEnemies());
     }
 
     void ClearMap()
@@ -92,6 +92,7 @@ public Color enemyColor = Color.red;
 
         // 플레이어는 항상 중앙
         cells[2, 2].color = playerColor;
+        
     }
 
 

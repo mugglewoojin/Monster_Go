@@ -2653,8 +2653,8 @@ MonoBehaviour:
   playerColor: {r: 0, g: 1, b: 0, a: 1}
   enemyColor: {r: 1, g: 0, b: 0, a: 1}
   gameData: {fileID: 921897007}
-  revealTime: 3
-  cooldown: 3
+  revealTime: 1
+  cooldown: 1
   flatCells:
   - {fileID: 672035144}
   - {fileID: 1962337761}
