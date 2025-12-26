@@ -16,16 +16,16 @@ public class DirectionUIController : MonoBehaviour
         switch (view.viewDir)
         {
             case 0:
-                directionText.text = "N";
+                directionText.text = "Direction: N";
                 break;
             case 1:
-                directionText.text = "E";
+                directionText.text = "Direction: E";
                 break;
             case 2:
-                directionText.text = "S";
+                directionText.text = "Direction: S";
                 break;
             case 3:
-                directionText.text = "W";
+                directionText.text = "Direction: W";
                 break;
         }
     }
